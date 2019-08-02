@@ -81,6 +81,8 @@ server.post('/api/messages', (req, res) => {
     });
 });
 
-server.get('/', function(req, res){
-    res.send('GET request')
+server.get('/api/messages', function(req, res){
+    adapter.processActivity(req, res, async (turnContext) => {
+        await bot.run(turnContext);
+    });
 });
