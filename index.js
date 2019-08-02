@@ -81,6 +81,6 @@ server.post('/api/messages', (req, res) => {
     });
 });
 
-server.get('/', function(req, res){
-    await bot.run(turnContext);
+server.get('/api/messages', function(req, res){
+    res.send('Bot should be desplayed.')
 });
