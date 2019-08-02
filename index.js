@@ -80,5 +80,3 @@ server.post('/api/messages', (req, res) => {
         await bot.run(turnContext);
     });
 });
-
-server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.js' }));
