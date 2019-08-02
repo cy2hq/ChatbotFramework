@@ -80,3 +80,7 @@ server.post('/api/messages', (req, res) => {
         await bot.run(turnContext);
     });
 });
+
+server.get('/', function(req, res){
+    res.send('GET request')
+});
