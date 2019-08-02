@@ -81,8 +81,6 @@ server.post('/api/messages', (req, res) => {
     });
 });
 
-server.get('/api/messages', function(req, res){
-    adapter.processActivity(req, res, async (turnContext) => {
-        await bot.run(turnContext);
-    });
+server.get('/', function(req, res){
+    await bot.run(turnContext);
 });
