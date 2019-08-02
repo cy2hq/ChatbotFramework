@@ -81,4 +81,4 @@ server.post('/api/messages', (req, res) => {
     });
 });
 
-server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.html' }));
+server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.js' }));
