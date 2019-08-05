@@ -81,6 +81,8 @@ server.post('/api/messages', (req, res) => {
     });
 });
 
-server.get('/api/messages', function(req, res){
-    res.send('Bot should be desplayed.')
-});
+//server.get('/api/messages', function(req, res){
+//   res.send('Bot should be desplayed.')
+//});
+
+server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.html' }));
