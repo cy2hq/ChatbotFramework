@@ -80,9 +80,3 @@ server.post('/api/messages', (req, res) => {
         await bot.run(turnContext);
     });
 });
-
-server.get('/api/messages', function(req, res){
-   res.send('Bot should be desplayed.')
-});
-
-//server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.html' }));
