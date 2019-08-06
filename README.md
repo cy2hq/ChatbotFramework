@@ -1,4 +1,4 @@
-# core-bot
+# DeliveryBot
 Demonstrate the core capabilities of the Microsoft Bot Framework
 
 This bot has been created using [Bot Framework](https://dev.botframework.com), it shows how to:
