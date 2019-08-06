@@ -59,7 +59,7 @@ class MainDialog extends ComponentDialog {
             return await stepContext.next();
         }
 
-        const messageText = stepContext.options.restartMsg ? stepContext.options.restartMsg : 'What can I help you with today?';
+        const messageText = stepContext.options.restartMsg ? stepContext.options.restartMsg : 'What can I help you with today?\nSay something like "Book a flight from Paris to Berlin on March 22, 2020"';
         const promptMessage = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
         return await stepContext.prompt('TextPrompt', { prompt: promptMessage });
     }
@@ -69,7 +69,7 @@ class MainDialog extends ComponentDialog {
      * Then, it hands off to the bookingDialog child dialog to collect any remaining details.
      */
     async actStep(stepContext) {
-        const bookingDetails = {};
+        let bookingDetails = {};
 
         if (!this.luisRecognizer.isConfigured) {
             // LUIS is not configured, we just run the BookingDialog path.
@@ -117,7 +117,7 @@ class MainDialog extends ComponentDialog {
      * will be empty if those entity values can't be mapped to a canonical item in the Airport.
      */
     async showWarningForUnsupportedCities(context, fromEntities, toEntities) {
-        const unsupportedCities = [];
+        let unsupportedCities = [];
         if (fromEntities.from && !fromEntities.airport) {
             unsupportedCities.push(fromEntities.from);
         }

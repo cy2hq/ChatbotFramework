@@ -45,19 +45,21 @@ adapter.onTurnError = async (context, error) => {
 
 // Define a state store for your bot. See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
+let conversationState, userState;
 
 // For local development, in-memory storage is used.
 // CAUTION: The Memory Storage used here is for local bot debugging only. When the bot
 // is restarted, anything stored in memory will be gone.
 const memoryStorage = new MemoryStorage();
-const conversationState = new ConversationState(memoryStorage);
-const userState = new UserState(memoryStorage);
+conversationState = new ConversationState(memoryStorage);
+userState = new UserState(memoryStorage);
 
 // If configured, pass in the FlightBookingRecognizer.  (Defining it externally allows it to be mocked for tests)
+let luisRecognizer;
 const { LuisAppId, LuisAPIKey, LuisAPIHostName } = process.env;
 const luisConfig = { applicationId: LuisAppId, endpointKey: LuisAPIKey, endpoint: `https://${ LuisAPIHostName }` };
 
-const luisRecognizer = new FlightBookingRecognizer(luisConfig);
+luisRecognizer = new FlightBookingRecognizer(luisConfig);
 
 // Create the main dialog.
 const bookingDialog = new BookingDialog(BOOKING_DIALOG);
@@ -69,7 +71,6 @@ const server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function() {
     console.log(`\n${ server.name } listening to ${ server.url }`);
     console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
-    console.log(`\nTo test your bot, see: https://aka.ms/debug-with-emulator`);
 });
 
 // Listen for incoming activities and route them to your bot main dialog.
@@ -79,8 +80,4 @@ server.post('/api/messages', (req, res) => {
         // route to bot activity handler.
         await bot.run(turnContext);
     });
-});
-
-server.get('/', function(req, res){
-    res.send("Get request");
 });
