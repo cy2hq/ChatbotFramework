@@ -128,7 +128,7 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('Je kunt altijd weer bij mij terecht voor FAQ of password assistentie. Fijne dag verder!');
             return await step.endDialog();
         } if (step.result === false) {
-            await step.context.sendActivity(`Try contacting the student help desk. Sorry I couldn't help you.`);
+            await step.context.sendActivity(`Sorry, I couldn't help you. Try contacting the student help desk.`);
             await step.context.sendActivity('Je kunt altijd weer bij mij terecht voor FAQ of password assistentie. Fijne dag verder!');
             return await step.endDialog();
         } else {

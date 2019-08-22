@@ -12,7 +12,7 @@ const CONFIRM_STUDENT_NUMBER_DIALOG = 'CONFIRM_STUDENT_NUMBER_DIALOG';
 class ConfirmStudentNumberDialog extends ComponentDialog {
     constructor() {
         super(CONFIRM_STUDENT_NUMBER_DIALOG);
-        this.addDialog(new NumberPrompt(NUMBER_PROMPT));
+        this.addDialog(new NumberPrompt(NUMBER_PROMPT, this.studentNumberValidator));
         this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT));
 
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
@@ -24,7 +24,8 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberStep(step) {
-        return await step.prompt(NUMBER_PROMPT, 'Please enter your student number.');
+        const promptOptions = { prompt: 'Please enter your 6 digit student number. (123456)', retryPrompt: 'Invalid student number. You can find it on your student card.\n Please enter it again.' };
+        return await step.prompt(NUMBER_PROMPT, promptOptions);
     }
 
     async studentNumberConfirmStep(step) {
@@ -34,14 +35,14 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
             console.log('Valid student number');
             return await step.endDialog(true);
         } if (validStudentNumber === false) {
-            await step.context.sendActivity('Invalid student number. You can find it on your student card.');
+            await step.context.sendActivity('Invalid student number. You can find it on your student card.\n Please enter it again.');
             return await step.replaceDialog(CONFIRM_STUDENT_NUMBER_DIALOG);
         } if (validStudentNumber === false && validCounter === 2) {
             return await step.endDialog(false);
         }
     }
 
-    checkStudentNumber(studentNumber) {
+    async checkStudentNumber(studentNumber) {
         if (studentNumber === 123456) {
             validStudentNumber = true;
             validCounter = 0;
@@ -49,6 +50,11 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
             validStudentNumber = false;
             validCounter++;
         }
+    }
+
+    async studentNumberValidator(promptContext) {
+        // Fix validator
+        return promptContext.recognized.succeeded && promptContext.attemptCount < 3 && promptContext.recognized.value > 0 && promptContext.recognized.value < 999999;
     }
 }
 
