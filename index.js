@@ -10,7 +10,7 @@ const restify = require('restify');
 const { BotFrameworkAdapter, MemoryStorage, UserState, ConversationState } = require('botbuilder');
 
 // This bot's main dialog.
-const { Holly } = require('./bots');
+const { Holly } = require('./bots/bot');
 const { MainDialog } = require('./dialogs/mainDialog');
 
 // Import required bot configuration.
@@ -21,7 +21,7 @@ dotenv.config({ path: ENV_FILE });
 const server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, () => {
     console.log(`\n${ server.name } listening to ${ server.url }`);
-    console.log(`\nTo talk to Holly, open the emulator select "Open Bot"`);
+    console.log(`\nTo talk to Holly, open the emulator and select "Open Bot"`);
 });
 
 // Create adapter.
@@ -29,8 +29,8 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 const adapter = new BotFrameworkAdapter({
     appId: process.env.MicrosoftAppId,
     appPassword: process.env.MicrosoftAppPassword
-    //channelService: process.env.ChannelService,
-    //openIdMetadata: process.env.BotOpenIdMetadata
+    // channelService: process.env.ChannelService,
+    // openIdMetadata: process.env.BotOpenIdMetadata
 });
 
 const memoryStorage = new MemoryStorage();

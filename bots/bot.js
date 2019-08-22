@@ -7,14 +7,14 @@ class Holly extends ActivityHandler {
     constructor(conversationState, userState, dialog) {
         super();
         if (!conversationState) throw new Error('[Holly]: Missing parameter. conversationState is required.');
-        if (!userState) throw new Error('[DialogBot]: Missing parameter. userState is required');
-        if (!dialog) throw new Error('[DialogBot]: Missing parameter. dialog is required');
-        
+        if (!userState) throw new Error('[Holly]: Missing parameter. userState is required');
+        if (!dialog) throw new Error('[Holly]: Missing parameter. dialog is required');
+
         this.conversationState = conversationState;
         this.userState = userState;
         this.dialog = dialog;
-        this.dialogState = this.converstationState.createProperty('DialogState');
-        
+        this.dialogState = this.conversationState.createProperty('DialogState');
+
         this.onMessage(async (context, next) => {
             console.log('Running dialog with Message Activity.');
             await this.dialog.run(context, this.dialogState);
