@@ -54,7 +54,11 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
 
     async studentNumberValidator(promptContext) {
         // Fix validator
-        return promptContext.recognized.succeeded && promptContext.attemptCount < 3 && promptContext.recognized.value > 0 && promptContext.recognized.value < 999999;
+        if (promptContext.recognized.succeeded && promptContext.attemptCount < 3 && promptContext.recognized.value > 0 && promptContext.recognized.value < 999999) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
