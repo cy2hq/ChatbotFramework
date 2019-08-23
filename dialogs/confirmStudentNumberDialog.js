@@ -24,7 +24,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberStep(step) {
-        const promptOptions = { prompt: 'Please enter your 6 digit student number. (123456)', retryPrompt: 'Invalid student number. You can find it on your student card.\n Please enter it again.' };
+        const promptOptions = { prompt: `Please enter your 6 digit student number. (123456)', retryPrompt: 'Invalid student number. You can find it on your student card.\n Please enter it again.` };
         return await step.prompt(NUMBER_PROMPT, promptOptions);
     }
 
