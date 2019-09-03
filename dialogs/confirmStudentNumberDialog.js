@@ -1,4 +1,5 @@
 const { ComponentDialog, NumberPrompt, ConfirmPrompt, WaterfallDialog } = require('botbuilder-dialogs');
+const fetch = require('node-fetch');
 
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -29,8 +30,11 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberConfirmStep(step) {
-        console.log(step.result);
-        this.checkStudentNumber(step.result);
+        console.log(`Input: ` + step.result);
+        var fakeJSON = await this.getJSON();
+        console.log(`JSON Studentnumber: ` + JSON.stringify(fakeJSON.studentnumber));
+        var studentNumberFakeJSON = JSON.stringify(fakeJSON.studentnumber);
+        this.checkStudentNumber(step.result, studentNumberFakeJSON);
         if (validStudentNumber === true && validCounter === 0) {
             console.log('Valid student number');
             return await step.endDialog(true);
@@ -42,8 +46,8 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         }
     }
 
-    async checkStudentNumber(studentNumber) {
-        if (studentNumber === 123456) {
+    async checkStudentNumber(studentNumber, jsonStudentNumber) {
+        if (String(studentNumber) === String(jsonStudentNumber)) {
             validStudentNumber = true;
             validCounter = 0;
         } else {
@@ -59,6 +63,14 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         } else {
             return false;
         }
+    }
+
+    async getJSON() {
+        return fetch('https://my-json-server.typicode.com/MaartenBlomer/FakeStudentJSON/students/1')
+            .then(response => {
+                var json = response.json();
+                return json;
+            });
     }
 }
 

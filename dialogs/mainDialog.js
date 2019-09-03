@@ -13,7 +13,6 @@ const {
 const { CardFactory } = require('botbuilder');
 const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
 const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
-const fetch = require('node-fetch');
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -78,9 +77,7 @@ class MainDialog extends ComponentDialog {
             // Should add separate dialog for password reset
             return await step.prompt(CONFIRM_PROMPT, `You selected: ${ step.result }. Is this correct?`, [`Yes`, `No`]);
         } if (step.result === 'F.A.Q.') {
-            await step.context.sendActivity('Placeholder for JSON Object.');
-            var foreignObject = await this.getJSON();
-            await step.context.sendActivity(`Something: ` + foreignObject.studentnumber);
+            await step.context.sendActivity('Not yet implemented.');
             return await step.endDialog();
         } if (step.result === 'Tuition fees') {
             await step.context.sendActivity('Not yet implemented.');
@@ -138,14 +135,6 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('End reached.');
             return await step.endDialog();
         }
-    }
-
-    async getJSON() {
-        return fetch('https://my-json-server.typicode.com/MaartenBlomer/FakeStudentJSON/students/1')
-            .then(response => {
-                var j = response.json();
-                return j;
-            });
     }
 }
 
