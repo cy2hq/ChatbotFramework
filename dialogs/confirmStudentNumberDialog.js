@@ -1,5 +1,6 @@
 const { ComponentDialog, NumberPrompt, ConfirmPrompt, WaterfallDialog } = require('botbuilder-dialogs');
 const fetch = require('node-fetch');
+const { CardFactory } = require('botbuilder');
 
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -25,8 +26,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberStep(step) {
-        const promptOptions = { prompt: `Please enter your 6 digit student number. (123456)`, retryPrompt: `Invalid student number. You can find it on your student card.\n Please enter it again.` };
-        return await step.prompt(NUMBER_PROMPT, promptOptions);
+        return await step.prompt(NUMBER_PROMPT, `Please enter your 6 digit student number. (123456)`);
     }
 
     async studentNumberConfirmStep(step) {
@@ -39,7 +39,15 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
             console.log('Valid student number');
             return await step.endDialog(true);
         } if (validStudentNumber === false) {
-            await step.context.sendActivity('Invalid student number. You can find it on your student card.\n Please enter it again.');
+            await step.context.sendActivity('Invalid student number. You can find the number on your student card.');
+            const studentCard = { attachments:
+                [CardFactory.heroCard(
+                    '',
+                    '',
+                    ['https://jstmedia.nl/img/stg/studentcard.png'],
+                    []
+                )] };
+            await step.context.sendActivity(studentCard);
             return await step.replaceDialog(CONFIRM_STUDENT_NUMBER_DIALOG);
         } if (validStudentNumber === false && validCounter === 2) {
             return await step.endDialog(false);

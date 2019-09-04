@@ -1,7 +1,5 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 const { ActivityHandler } = require('botbuilder');
+const { CardFactory } = require('botbuilder');
 
 class Holly extends ActivityHandler {
     constructor(conversationState, userState, dialog) {
@@ -25,7 +23,13 @@ class Holly extends ActivityHandler {
             const membersAdded = context.activity.membersAdded;
             for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
                 if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                    const reply = `Sup y'all it's me, ya gurl Holly.\n Enter your name to continue.`;
+                    const reply = { attachments:
+                        [CardFactory.heroCard(
+                            `It's ya gurl Holly. Please enter your name to continue.`,
+                            '',
+                            ['http://jstmedia.nl/img/stg/avatar.png'],
+                            []
+                        )] };
                     await context.sendActivity(reply);
                 }
             }

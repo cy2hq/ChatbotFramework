@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 const {
     ChoicePrompt,
     ComponentDialog,
@@ -64,7 +61,7 @@ class MainDialog extends ComponentDialog {
             [CardFactory.heroCard(
                 'What can I help you with?',
                 'Select an option.',
-                ['http://jstmedia.nl/img/stg/avatar.png'],
+                [],
                 ['Reset password', 'F.A.Q.', 'Tuition fees']
             )] };
         await step.context.sendActivity(reply);
