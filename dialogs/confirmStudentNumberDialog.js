@@ -26,12 +26,16 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberStep(step) {
-        return await step.prompt(NUMBER_PROMPT, `Please enter your 6 digit student number. (123456)`);
+        const promptOptions = {
+            prompt: `Please enter your 6 digit student number. (123456)`,
+            retryPrompt: `Invalid student number.\n Please enter it again.`
+        };
+        return await step.prompt(NUMBER_PROMPT, promptOptions);
     }
 
     async studentNumberConfirmStep(step) {
         console.log(`Input: ` + step.result);
-        var fakeJSON = await this.getJSON();
+        var fakeJSON = await this.getJSON(step.result);
         console.log(`JSON Studentnumber: ` + JSON.stringify(fakeJSON.studentnumber));
         var studentNumberFakeJSON = JSON.stringify(fakeJSON.studentnumber);
         this.checkStudentNumber(step.result, studentNumberFakeJSON);
@@ -64,17 +68,17 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         }
     }
 
-    async studentNumberValidator(promptContext) {
-        // Fix validator
-        if (promptContext.recognized.succeeded && promptContext.attemptCount < 3 && promptContext.recognized.value > 0 && promptContext.recognized.value < 999999) {
+    async studentNumberValidator(value) {
+        if (value.recognized.succeeded && value.attemptCount < 2 && value.recognized.value > 0 && value.recognized.value < 999999) {
             return true;
         } else {
             return false;
         }
     }
 
-    async getJSON() {
-        return fetch('https://my-json-server.typicode.com/MaartenBlomer/FakeStudentJSON/students/1')
+    async getJSON(studentNumber) {
+        var studentToFetch = 'https://my-json-server.typicode.com/MaartenBlomer/FakeStudentJSON/students/' + studentNumber;
+        return fetch(studentToFetch)
             .then(response => {
                 var json = response.json();
                 return json;
