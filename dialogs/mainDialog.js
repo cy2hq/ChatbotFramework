@@ -77,7 +77,7 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('Not yet implemented.');
             return await step.endDialog();
         } if (step.result === 'Tuition fees') {
-            await step.context.sendActivity('Not yet implemented.');
+            await step.context.sendActivity('JSON Testing');
             return await step.endDialog();
         } else {
             await step.context.sendActivity('Not a valid option.');
