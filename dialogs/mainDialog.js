@@ -11,7 +11,6 @@ const { CardFactory } = require('botbuilder');
 const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
 const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
 const fetch = require('node-fetch');
-const Headers = require('node-fetch');
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -141,16 +140,16 @@ class MainDialog extends ComponentDialog {
     async getCY2JSON() {
         return fetch('https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true', {
             method: 'GET'
-            /* headers: new Headers({
-                'Authorization': 'Basic ' + Buffer.from('PSSLI' + ':' + 'PSSLI', 'base64'),
-                'Content-Type': 'application/json'
-            }) */
         })
             .then(response => {
-                var json = response.json();
-                console.log(json);
-                return json;
-            }).catch(error => console.log('Get/post failed :', error));
+                var res = response.text();
+                console.log(res);
+                return res;
+            }).catch(error => console.log('Get/post failed :', error))
+            .then(data => {
+                console.log(data);
+                return data;
+            });
     }
 }
 
