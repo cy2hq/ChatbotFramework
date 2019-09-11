@@ -1,5 +1,5 @@
 const { ComponentDialog, NumberPrompt, ConfirmPrompt, WaterfallDialog } = require('botbuilder-dialogs');
-const { fetch } = require('node-fetch');
+const fetch = require('node-fetch');
 const { CardFactory } = require('botbuilder');
 
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';

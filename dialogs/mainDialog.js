@@ -10,6 +10,8 @@ const {
 const { CardFactory } = require('botbuilder');
 const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
 const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
+const fetch = require('node-fetch');
+const Headers = require('node-fetch');
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -78,6 +80,8 @@ class MainDialog extends ComponentDialog {
             return await step.endDialog();
         } if (step.result === 'Tuition fees') {
             await step.context.sendActivity('JSON Testing');
+            var CY2JSON = await this.getCY2JSON();
+            await step.context.sendActivity(CY2JSON);
             return await step.endDialog();
         } else {
             await step.context.sendActivity('Not a valid option.');
@@ -132,6 +136,21 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('End reached.');
             return await step.endDialog();
         }
+    }
+
+    async getCY2JSON() {
+        return fetch('https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true', {
+            method: 'GET'
+            /* headers: new Headers({
+                'Authorization': 'Basic ' + Buffer.from('PSSLI' + ':' + 'PSSLI', 'base64'),
+                'Content-Type': 'application/json'
+            }) */
+        })
+            .then(response => {
+                var json = response.json();
+                console.log(json);
+                return json;
+            }).catch(error => console.log('Get/post failed :', error));
     }
 }
 
