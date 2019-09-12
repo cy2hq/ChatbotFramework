@@ -10,7 +10,12 @@ const {
 const { CardFactory } = require('botbuilder');
 const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
 const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
+/*
 const fetch = require('node-fetch');
+const Headers = require('node-fetch');
+*/
+// const request = require('request');
+const rp = require('request-promise');
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -80,6 +85,7 @@ class MainDialog extends ComponentDialog {
         } if (step.result === 'Tuition fees') {
             await step.context.sendActivity('JSON Testing');
             var CY2JSON = await this.getCY2JSON();
+            console.log(CY2JSON);
             await step.context.sendActivity(CY2JSON);
             return await step.endDialog();
         } else {
@@ -137,9 +143,14 @@ class MainDialog extends ComponentDialog {
         }
     }
 
+    /*
     async getCY2JSON() {
         return fetch('https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true', {
-            method: 'GET'
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': 'Basic UFNTTEk6UFNTTEk=',
+                'Content-Type': 'application/json'
+            })
         })
             .then(response => {
                 var res = response.text();
@@ -150,6 +161,42 @@ class MainDialog extends ComponentDialog {
                 console.log(data);
                 return data;
             });
+    }
+    */
+    async getCY2JSON() {
+        const options = {
+            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
+            method: 'GET',
+            auth: {
+                username: 'PSSLI',
+                password: 'PSSLI'
+            }
+        };
+        var data;
+
+        /*
+        request(options, function(_err, _res, body) {
+            var json = JSON.parse(body);
+            console.log(json);
+            data = JSON.stringify(json['data']['query']['rows'][0]['BIRTHPLACE']);
+            console.log(data);
+        });
+        */
+
+        rp(options)
+            .then(function(json) {
+                console.log(json);
+                var parsedjson = JSON.parse(json);
+                console.log(parsedjson);
+                data = JSON.stringify(parsedjson['data']['query']['rows'][0]['BIRTHPLACE']);
+                console.log(data);
+                return data;
+            })
+            .catch(function(err) {
+                console.log('OOF :' + err);
+            });
+
+        return data;
     }
 }
 
