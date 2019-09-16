@@ -101,7 +101,6 @@ class MainDialog extends ComponentDialog {
         } else {
             await step.context.sendActivity('Not in happy flow :(');
             return await step.endDialog();
-            // return await step.replaceDialog();
         }
     }
 
@@ -111,7 +110,6 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('Please follow this link to reset your password.');
             await step.context.sendActivity('https://aka.ms/sspr');
             await step.context.sendActivity('Je kunt altijd weer bij mij terecht voor FAQ of password assistentie. Fijne dag verder!');
-            // End dialogue
             return step.endDialog();
         } if (step.result === false) {
             return await step.beginDialog(CONFIRM_STUDENT_NUMBER_DIALOG);
@@ -143,26 +141,6 @@ class MainDialog extends ComponentDialog {
         }
     }
 
-    /*
-    async getCY2JSON() {
-        return fetch('https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true', {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': 'Basic UFNTTEk6UFNTTEk=',
-                'Content-Type': 'application/json'
-            })
-        })
-            .then(response => {
-                var res = response.text();
-                console.log(res);
-                return res;
-            }).catch(error => console.log('Get/post failed :', error))
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-    }
-    */
     async getCY2JSON() {
         const options = {
             url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
@@ -174,16 +152,7 @@ class MainDialog extends ComponentDialog {
         };
         var data;
 
-        /*
-        request(options, function(_err, _res, body) {
-            var json = JSON.parse(body);
-            console.log(json);
-            data = JSON.stringify(json['data']['query']['rows'][0]['BIRTHPLACE']);
-            console.log(data);
-        });
-        */
-
-        rp(options)
+        await rp(options)
             .then(function(json) {
                 console.log(json);
                 var parsedjson = JSON.parse(json);
