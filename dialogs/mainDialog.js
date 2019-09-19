@@ -8,14 +8,17 @@ const {
     WaterfallDialog
 } = require('botbuilder-dialogs');
 const { CardFactory } = require('botbuilder');
-const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
-const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
-/*
-const fetch = require('node-fetch');
-const Headers = require('node-fetch');
-*/
-// const request = require('request');
+const {
+    ConfirmEmailDialog,
+    CONFIRM_EMAIL_DIALOG
+} = require('./confirmEmailDialog');
+const {
+    ConfirmStudentNumberDialog,
+    CONFIRM_STUDENT_NUMBER_DIALOG
+} = require('./confirmStudentNumberDialog');
 const rp = require('request-promise');
+
+// Add all the nesseray modules which are going to be used in this dialog
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
@@ -51,6 +54,8 @@ class MainDialog extends ComponentDialog {
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
+    // Constructor for dialog components
+
     async run(turnContext, accessor) {
         const dialogSet = new DialogSet(accessor);
         dialogSet.add(this);
@@ -61,6 +66,8 @@ class MainDialog extends ComponentDialog {
             await dialogContext.beginDialog(this.id);
         }
     }
+
+    // Start the dialog
 
     async problemSelectionStep(step) {
         const reply = { attachments:
@@ -74,10 +81,11 @@ class MainDialog extends ComponentDialog {
         return await step.prompt(PROBLEM_PROMPT, '');
     }
 
+    // Hero card for problem selection
+
     async problemSelectionConfirmStep(step) {
         console.log(step.result);
         if (step.result === 'Reset password') {
-            // Should add separate dialog for password reset
             return await step.prompt(CONFIRM_PROMPT, `You selected: ${ step.result }. Is this correct?`, [`Yes`, `No`]);
         } if (step.result === 'F.A.Q.') {
             await step.context.sendActivity('Not yet implemented.');
@@ -94,6 +102,8 @@ class MainDialog extends ComponentDialog {
         }
     }
 
+    // Handle the problem selection
+
     async passwordResetStep(step) {
         console.log(step.result);
         if (step.result === true) {
@@ -103,6 +113,8 @@ class MainDialog extends ComponentDialog {
             return await step.endDialog();
         }
     }
+
+    // Ask for confirmation
 
     async passwordResetConfirmStep(step) {
         console.log(step.result);
@@ -116,6 +128,9 @@ class MainDialog extends ComponentDialog {
         }
     }
 
+    // If the user is familiar with the reset tool, send to website
+    // Else send user to confirm student number dialog
+
     async confirmStep(step) {
         console.log('Step after student number dialog: ' + step.result);
         if (step.result === true) {
@@ -124,6 +139,8 @@ class MainDialog extends ComponentDialog {
             return await step.next();
         }
     }
+
+    // Confirm that the user has recieved an email or not.
 
     async goodbyeStep(step) {
         console.log('Entering goodbye step: ' + step.result);
@@ -140,6 +157,8 @@ class MainDialog extends ComponentDialog {
             return await step.endDialog();
         }
     }
+
+    // Goodbye step, closing the conversation.
 
     async getCY2JSON() {
         const options = {
