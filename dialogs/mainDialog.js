@@ -10,11 +10,6 @@ const {
 const { CardFactory } = require('botbuilder');
 const { ConfirmEmailDialog, CONFIRM_EMAIL_DIALOG } = require('./confirmEmailDialog');
 const { ConfirmStudentNumberDialog, CONFIRM_STUDENT_NUMBER_DIALOG } = require('./confirmStudentNumberDialog');
-/*
-const fetch = require('node-fetch');
-const Headers = require('node-fetch');
-*/
-// const request = require('request');
 const rp = require('request-promise');
 
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
