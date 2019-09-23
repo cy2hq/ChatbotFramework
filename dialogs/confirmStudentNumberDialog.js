@@ -1,10 +1,15 @@
-const { ComponentDialog, NumberPrompt, ConfirmPrompt, WaterfallDialog } = require('botbuilder-dialogs');
-const fetch = require('node-fetch');
-const { CardFactory } = require('botbuilder');
+const {
+    ComponentDialog,
+    ConfirmPrompt,
+    WaterfallDialog,
+    TextPrompt
+} = require('botbuilder-dialogs');
+const rp = require('request-promise');
+const CardFactory = require('botbuilder');
 
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
-const NUMBER_PROMPT = 'NUMBER_PROMPT';
+const STUDENTNUMBER_CHECK = 'STUDENTNUMBER_CHECK';
 
 var validStudentNumber;
 var validCounter = 0;
@@ -14,7 +19,7 @@ const CONFIRM_STUDENT_NUMBER_DIALOG = 'CONFIRM_STUDENT_NUMBER_DIALOG';
 class ConfirmStudentNumberDialog extends ComponentDialog {
     constructor() {
         super(CONFIRM_STUDENT_NUMBER_DIALOG);
-        this.addDialog(new NumberPrompt(NUMBER_PROMPT, this.studentNumberValidator));
+        this.addDialog(new TextPrompt(STUDENTNUMBER_CHECK));
         this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT));
 
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
@@ -26,19 +31,14 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
     }
 
     async studentNumberStep(step) {
-        const promptOptions = {
-            prompt: `Please enter your 6 digit student number. (123456)`,
-            retryPrompt: `Invalid student number.\n Please enter it again.`
-        };
-        return await step.prompt(NUMBER_PROMPT, promptOptions);
+        await step.context.sendActivity('What is your student number? (GW7014)');
+        return await step.prompt(STUDENTNUMBER_CHECK);
     }
 
     async studentNumberConfirmStep(step) {
         console.log(`Input: ` + step.result);
-        var fakeJSON = await this.getJSON(step.result);
-        console.log(`JSON Studentnumber: ` + JSON.stringify(fakeJSON.studentnumber));
-        var studentNumberFakeJSON = JSON.stringify(fakeJSON.studentnumber);
-        this.checkStudentNumber(step.result, studentNumberFakeJSON);
+        validStudentNumber = await this.checkValidStudent(step.result);
+        console.log('Valid student number: ' + validStudentNumber);
         if (validStudentNumber === true && validCounter === 0) {
             console.log('Valid student number');
             return await step.endDialog(true);
@@ -58,31 +58,86 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         }
     }
 
-    async checkStudentNumber(studentNumber, jsonStudentNumber) {
-        if (String(studentNumber) === String(jsonStudentNumber)) {
-            validStudentNumber = true;
-            validCounter = 0;
-        } else {
-            validStudentNumber = false;
-            validCounter++;
-        }
-    }
+    async checkValidStudent(studentNumber) {
+        const options = {
+            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=' + studentNumber + '&json_resp=true',
+            method: 'GET',
+            auth: {
+                username: 'PSSLI',
+                password: 'PSSLI'
+            }
+        };
+        console.log(options);
+        var result;
 
-    async studentNumberValidator(value) {
-        if (value.recognized.succeeded && value.attemptCount < 2 && value.recognized.value > 0 && value.recognized.value < 999999) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    async getJSON(studentNumber) {
-        var studentToFetch = 'https://my-json-server.typicode.com/MaartenBlomer/FakeStudentJSON/students/' + studentNumber;
-        return fetch(studentToFetch)
-            .then(response => {
-                var json = response.json();
-                return json;
+        await rp(options)
+            .then(function(json) {
+                var parsedjson = JSON.parse(json);
+                result = JSON.stringify(parsedjson['data']['query']['numrows']);
+                console.log('Found: ' + result);
+                if (result === 0) {
+                    result = false;
+                    validCounter += 1;
+                    return result;
+                } else {
+                    result = true;
+                    return result;
+                }
+            })
+            .catch(function(err) {
+                console.log('OOF :' + err);
             });
+    }
+
+    async getStudentNumber() {
+        const options = {
+            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
+            method: 'GET',
+            auth: {
+                username: 'PSSLI',
+                password: 'PSSLI'
+            }
+        };
+        var dataStudentNumber;
+
+        await rp(options)
+            .then(function(json) {
+                console.log(json);
+                var parsedjson = JSON.parse(json);
+                console.log(parsedjson);
+                dataStudentNumber = JSON.stringify(parsedjson['data']['query']['rows'][0]['BIRTHPLACE']);
+                console.log(dataStudentNumber);
+                return dataStudentNumber;
+            })
+            .catch(function(err) {
+                console.log('OOF :' + err);
+            });
+
+        return dataStudentNumber;
+    }
+
+    async getStudentNatID() {
+        const options = {
+            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
+            method: 'GET',
+            auth: {
+                username: 'PSSLI',
+                password: 'PSSLI'
+            }
+        };
+        var dataStudentNatID;
+
+        await rp(options)
+            .then(function(json) {
+                var parsedjson = JSON.parse(json);
+                dataStudentNatID = JSON.stringify(parsedjson['data']['query']['rows'][0]['NATIONALID']);
+                return dataStudentNatID;
+            })
+            .catch(function(err) {
+                console.log('OOF :' + err);
+            });
+
+        return dataStudentNatID;
     }
 }
 

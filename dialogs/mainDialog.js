@@ -16,7 +16,6 @@ const {
     ConfirmStudentNumberDialog,
     CONFIRM_STUDENT_NUMBER_DIALOG
 } = require('./confirmStudentNumberDialog');
-const rp = require('request-promise');
 
 // Add all the nesseray modules which are going to be used in this dialog
 
@@ -91,10 +90,7 @@ class MainDialog extends ComponentDialog {
             await step.context.sendActivity('Not yet implemented.');
             return await step.endDialog();
         } if (step.result === 'Tuition fees') {
-            await step.context.sendActivity('JSON Testing');
-            var CY2JSON = await this.getCY2JSON();
-            console.log(CY2JSON);
-            await step.context.sendActivity(CY2JSON);
+            await step.context.sendActivity('Not yet implemented.');
             return await step.endDialog();
         } else {
             await step.context.sendActivity('Not a valid option.');
@@ -109,8 +105,8 @@ class MainDialog extends ComponentDialog {
         if (step.result === true) {
             return await step.prompt(CONFIRM_PROMPT, 'Are you familiar with the current reset tool?', ['Yes', 'No']);
         } else {
-            await step.context.sendActivity('Not in happy flow :(');
-            return await step.endDialog();
+            // Restarts the dialog
+            return await step.beginDialog(MAIN_DIALOG);
         }
     }
 
@@ -159,33 +155,6 @@ class MainDialog extends ComponentDialog {
     }
 
     // Goodbye step, closing the conversation.
-
-    async getCY2JSON() {
-        const options = {
-            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
-            method: 'GET',
-            auth: {
-                username: 'PSSLI',
-                password: 'PSSLI'
-            }
-        };
-        var data;
-
-        await rp(options)
-            .then(function(json) {
-                console.log(json);
-                var parsedjson = JSON.parse(json);
-                console.log(parsedjson);
-                data = JSON.stringify(parsedjson['data']['query']['rows'][0]['BIRTHPLACE']);
-                console.log(data);
-                return data;
-            })
-            .catch(function(err) {
-                console.log('OOF :' + err);
-            });
-
-        return data;
-    }
 }
 
 module.exports.MainDialog = MainDialog;
