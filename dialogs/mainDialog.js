@@ -46,7 +46,8 @@ class MainDialog extends ComponentDialog {
             this.problemSelectionConfirmStep.bind(this),
             this.passwordResetStep.bind(this),
             this.passwordResetConfirmStep.bind(this),
-            this.confirmStep.bind(this),
+            this.confirmStudentStep.bind(this),
+            this.confirmEmailStep.bind(this),
             this.goodbyeStep.bind(this)
         ]));
 
@@ -127,8 +128,22 @@ class MainDialog extends ComponentDialog {
     // If the user is familiar with the reset tool, send to website
     // Else send user to confirm student number dialog
 
-    async confirmStep(step) {
-        console.log('Step after student number dialog: ' + step.result);
+    async confirmNationalIDStep(step) {
+        console.log('Recieved student number:' + step.result);
+        await step.context.sendActivity('What is your national ID?');
+        studentNationalID = this.confirmStudent(step.result);
+    }
+
+    async confirmStudentStep(step) {
+        console.log('Student entered Nat ID: ' + step.result);
+        var correctNatID = this.compareID(step.result);
+        if (correctNatID === true) {
+            return await step.next();
+        }
+    }
+
+    async confirmEmailStep(step) {
+        console.log('Step after confirmed student: ' + step.result);
         if (step.result === true) {
             return await step.beginDialog(CONFIRM_EMAIL_DIALOG);
         } else {

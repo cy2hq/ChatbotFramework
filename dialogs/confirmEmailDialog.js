@@ -24,11 +24,11 @@ class ConfirmEmailDialog extends ComponentDialog {
         if (failCounter <= 0) {
             await step.context.sendActivity(`I've send you an email corresponding to the entered student number.`);
             return await step.prompt(CONFIRM_PROMPT, 'Did you receive the email?', ['Yes', 'No']);
-        } if (failCounter === 1) {
+        } if (failCounter === 1 || failCounter === 2) {
             console.log('Fail #' + failCounter);
             await step.context.sendActivity(`I've send another email.\n Try checking your spam folder.`);
             return await step.prompt(CONFIRM_PROMPT, 'Did you receive the email?', ['Yes', 'No']);
-        } if (failCounter === 2) {
+        } if (failCounter === 3) {
             console.log('Fail #' + failCounter + '. Exit loop.');
             return await step.endDialog(false);
         }
@@ -40,7 +40,7 @@ class ConfirmEmailDialog extends ComponentDialog {
             failCounter = 0;
             return await step.endDialog(true);
         } else {
-            console.log('Looping email step.');
+            console.log('Looping email step. #' + failCounter);
             failCounter++;
             return await step.replaceDialog(CONFIRM_EMAIL_DIALOG);
         }
