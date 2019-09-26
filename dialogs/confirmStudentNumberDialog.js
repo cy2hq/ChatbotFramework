@@ -40,7 +40,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         console.log('Valid student number: ' + validStudentNumber);
         if (validStudentNumber === true && validCounter === 0) {
             console.log('Entering NatID Validation');
-            return await step.endDialog(step.result);
+            return await step.endDialog(true);
         } if (validStudentNumber === false) {
             await step.context.sendActivity('Invalid student number. You can find the number on your student card.');
             const studentCard = { attachments:
@@ -90,6 +90,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         return result;
     }
 
+    /*
     async getStudentNumber() {
         const options = {
             url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
@@ -140,6 +141,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
 
         return dataStudentNatID;
     }
+    */
 }
 
 module.exports.ConfirmStudentNumberDialog = ConfirmStudentNumberDialog;
