@@ -90,7 +90,6 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         return result;
     }
 
-    /*
     async getStudentNumber() {
         const options = {
             url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
@@ -141,7 +140,6 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
 
         return dataStudentNatID;
     }
-    */
 }
 
 module.exports.ConfirmStudentNumberDialog = ConfirmStudentNumberDialog;

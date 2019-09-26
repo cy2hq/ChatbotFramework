@@ -1,6 +1,6 @@
-# Holly v1.0
+# Holly v2.0
 
-This bot has been created using [Bot Framework](https://dev.botframework.com), we expanded it to create version 1.0 of Holly, the interactive student assistant.
+This bot has been created using [Bot Framework](https://dev.botframework.com), we expanded it to create version 2.0 of Holly, the interactive student assistant.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org) version 10.14 or higher

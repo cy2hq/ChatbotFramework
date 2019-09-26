@@ -128,7 +128,6 @@ class MainDialog extends ComponentDialog {
     // If the user is familiar with the reset tool, send to website
     // Else send user to confirm student number dialog
 
-    /*
     async confirmNationalIDStep(step) {
         console.log('Recieved student number:' + step.result);
         await step.context.sendActivity('What is your national ID?');
@@ -142,7 +141,6 @@ class MainDialog extends ComponentDialog {
             return await step.next();
         }
     }
-    */
 
     async confirmEmailStep(step) {
         console.log('Step after confirmed student: ' + step.result);
