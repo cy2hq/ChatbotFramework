@@ -39,8 +39,7 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
         var validStudentNumber = await this.checkValidStudent(step.result);
         console.log('Valid student number: ' + validStudentNumber);
         if (validStudentNumber === true && validCounter === 0) {
-            console.log('Entering NatID Validation');
-            return await step.endDialog(true);
+            return await step.endDialog(step.result);
         } if (validStudentNumber === false) {
             await step.context.sendActivity('Invalid student number. You can find the number on your student card.');
             const studentCard = { attachments:
@@ -88,57 +87,6 @@ class ConfirmStudentNumberDialog extends ComponentDialog {
             });
 
         return result;
-    }
-
-    async getStudentNumber() {
-        const options = {
-            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
-            method: 'GET',
-            auth: {
-                username: 'PSSLI',
-                password: 'PSSLI'
-            }
-        };
-        var dataStudentNumber;
-
-        await rp(options)
-            .then(function(json) {
-                console.log(json);
-                var parsedjson = JSON.parse(json);
-                console.log(parsedjson);
-                dataStudentNumber = JSON.stringify(parsedjson['data']['query']['rows'][0]['BIRTHPLACE']);
-                console.log(dataStudentNumber);
-                return dataStudentNumber;
-            })
-            .catch(function(err) {
-                console.log('OOF :' + err);
-            });
-
-        return dataStudentNumber;
-    }
-
-    async getStudentNatID() {
-        const options = {
-            url: 'https://cy2-cs92.mcx.nl/PSIGW/RESTListeningConnector/PSFT_CS/ExecuteQuery.v1/public/CY2_ODA_PERDATA/JSON/NONFILE?isconnectedquery=N&maxrows=200&prompt_uniquepromptname=BIND1&prompt_fieldvalue=GW7014&json_resp=true',
-            method: 'GET',
-            auth: {
-                username: 'PSSLI',
-                password: 'PSSLI'
-            }
-        };
-        var dataStudentNatID;
-
-        await rp(options)
-            .then(function(json) {
-                var parsedjson = JSON.parse(json);
-                dataStudentNatID = JSON.stringify(parsedjson['data']['query']['rows'][0]['NATIONALID']);
-                return dataStudentNatID;
-            })
-            .catch(function(err) {
-                console.log('OOF :' + err);
-            });
-
-        return dataStudentNatID;
     }
 }
 

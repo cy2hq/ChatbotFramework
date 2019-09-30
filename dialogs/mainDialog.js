@@ -16,6 +16,10 @@ const {
     ConfirmStudentNumberDialog,
     CONFIRM_STUDENT_NUMBER_DIALOG
 } = require('./confirmStudentNumberDialog');
+const {
+    ConfirmNatIDDialog,
+    CONFIRM_NAT_ID_DIALOG
+} = require('./confirmNatIDDialog');
 
 // Add all the nesseray modules which are going to be used in this dialog
 
@@ -26,6 +30,8 @@ const USER_PROFILE = 'USER_PROFILE';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 const PROBLEM_PROMPT = 'PROBLEM_PROMPT';
 const MAIN_DIALOG = 'MAIN_DIALOG';
+
+var studentID;
 
 class MainDialog extends ComponentDialog {
     constructor(userState) {
@@ -40,13 +46,14 @@ class MainDialog extends ComponentDialog {
 
         this.addDialog(new ConfirmEmailDialog());
         this.addDialog(new ConfirmStudentNumberDialog());
+        this.addDialog(new ConfirmNatIDDialog());
 
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.problemSelectionStep.bind(this),
             this.problemSelectionConfirmStep.bind(this),
             this.passwordResetStep.bind(this),
             this.passwordResetConfirmStep.bind(this),
-            // this.confirmStudentStep.bind(this),
+            this.confirmNationalIDStep.bind(this),
             this.confirmEmailStep.bind(this),
             this.goodbyeStep.bind(this)
         ]));
@@ -129,21 +136,16 @@ class MainDialog extends ComponentDialog {
     // Else send user to confirm student number dialog
 
     async confirmNationalIDStep(step) {
-        console.log('Recieved student number:' + step.result);
-        await step.context.sendActivity('What is your national ID?');
-        studentNationalID = this.confirmStudent(step.result);
-    }
-
-    async confirmStudentStep(step) {
-        console.log('Student entered Nat ID: ' + step.result);
-        var correctNatID = this.compareID(step.result);
-        if (correctNatID === true) {
-            return await step.next();
+        studentID = step.result;
+        if (step.result === false) {
+            return step.endDialog();
+        } else {
+            return await step.beginDialog(CONFIRM_NAT_ID_DIALOG, studentID);
         }
     }
 
     async confirmEmailStep(step) {
-        console.log('Step after confirmed student: ' + step.result);
+        console.log('Checking for valid email: ' + step.result);
         if (step.result === true) {
             return await step.beginDialog(CONFIRM_EMAIL_DIALOG);
         } else {
