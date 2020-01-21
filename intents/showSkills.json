@@ -1,0 +1,34 @@
+{
+  "name" : "showSkills",
+  "description" : "Show a list of options",
+  "type" : "NLPIntent",
+  "intentParameters" : [ ],
+  "exampleData" : [ {
+    "sentence" : "Skills",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "show skills",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "showSkills",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "list",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "show list",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "options",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "hello",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "hi",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "start",
+    "exampleEntities" : [ ]
+  } ]
+}

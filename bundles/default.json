@@ -1,0 +1,14 @@
+{
+  "languageTag" : "default",
+  "keys" : {
+    "system.intent.APIKeys.conversationName" : {
+      "message" : "APIKeys"
+    },
+    "system.intent.showSkills.conversationName" : {
+      "message" : "showSkills"
+    },
+    "system.intent.OAuth2.conversationName" : {
+      "message" : "OAuth2"
+    }
+  }
+}

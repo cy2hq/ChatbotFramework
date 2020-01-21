@@ -1,0 +1,8 @@
+{
+  "type" : "USER",
+  "name" : "MB_API_OAuth2",
+  "displayName" : "MB_API_OAuth2",
+  "version" : "1.0",
+  "intentTrainer" : "Sakura",
+  "trainingModels" : [ ]
+}

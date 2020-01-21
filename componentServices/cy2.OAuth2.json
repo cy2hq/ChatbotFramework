@@ -1,0 +1,9 @@
+{
+  "type" : "HOSTED",
+  "name" : "cy2.OAuth2",
+  "version" : "1.1",
+  "packageFileName" : "my-custom-component-1.0.0.tgz",
+  "packageChecksum" : "42b9ff415446c3c56b227c5832fd58e6",
+  "runtime" : "node",
+  "enabled" : true
+}

@@ -1,0 +1,9 @@
+{
+  "type" : "HOSTED",
+  "name" : "cy2.APIKeys",
+  "description" : "Final working version of API Keys for demo",
+  "packageFileName" : "my-custom-component-1.0.0.tgz",
+  "packageChecksum" : "a58ebb266d930142f835399659be944b",
+  "runtime" : "node",
+  "enabled" : true
+}

@@ -1,0 +1,22 @@
+{
+  "name" : "APIKeys",
+  "description" : "Use API Keys for connection to 3rd party API.",
+  "type" : "NLPIntent",
+  "intentParameters" : [ ],
+  "exampleData" : [ {
+    "sentence" : "API Keys",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "something with keys and animals",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "search for animal using keys",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "test api keys",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "connection with api keys",
+    "exampleEntities" : [ ]
+  } ]
+}

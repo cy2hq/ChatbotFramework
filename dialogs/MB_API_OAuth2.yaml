@@ -1,0 +1,116 @@
+metadata:
+  platformVersion: "1.1"
+main: true
+name: MB_API_OAuth2
+
+#
+# Context and Variables
+#
+
+context:
+  variables:
+    iResult: "string"
+    result: "string"
+
+#
+# States
+#
+
+states:
+  intent:
+    component: "System.Intent"
+    properties:
+      variable: iResult
+    transitions:
+      actions:
+        showSkills: "showSkills"
+        unresolvedIntent: "unresolvedIntent"
+        
+  #
+  # Show list with the different authentication types
+  #
+  showSkills:
+   component: "System.List"
+   properties:
+    prompt: "You can choose from these connection types:"
+    options:
+    - value: "OAuth2"
+      label: "OAuth2"
+    - value: "APIKeys"
+      label: "APIKeys"
+   transitions:
+    actions:
+     OAuth2: "OAuth2"
+     APIKeys: "APIKeys"
+     unresolvedIntent: "unresolvedIntent"
+     
+  #
+  # OAuth2
+  #
+  OAuth2:
+    component: "cy2.OAuth2"
+    properties:
+      result: "result"
+    transitions:
+      actions:
+       success: "goodConnection"
+       failure: "connectionFailure"
+       warning: "connectionError"
+
+  goodConnection:
+   component: "System.Output"
+   properties:
+    text: ${result.value}
+   transitions:
+    return: "intent"
+    
+  connectionFailure:
+   component: "System.Output"
+   properties:
+    text: "Connection Token Error"
+   transitions:
+    return: "intent"
+
+  connectionError:
+   component: "System.Output"
+   properties:
+    text: "Connection Error"
+   transitions:
+    return: "intent"
+  
+  #
+  # APIKeys
+  #
+  APIKeys:
+   component: "cy2.APIKeys"
+   properties:
+    result: "result"
+   transitions:
+    actions:
+     success: "goodAPIConnection"
+     warning: "connectionAPIError"
+    
+  goodAPIConnection:
+   component: "System.Output"
+   properties:
+    text: ${result.value}
+   transitions:
+    return: "intent"
+   
+  connectionAPIError:
+   component: "System.Output"
+   properties:
+    text: "API Connection Error"
+   transitions:
+    return: "intent"
+  
+  
+  #
+  # unresolvedIntent
+  #
+  unresolvedIntent:
+    component: "System.Output"
+    properties:
+      text: "Sorry, something went wrong."
+    transitions:
+      return: "intent"

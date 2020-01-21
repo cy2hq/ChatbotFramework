@@ -1,0 +1,25 @@
+{
+  "name" : "OAuth2",
+  "description" : "Use OAuth2 for connection to 3rd party API.",
+  "type" : "NLPIntent",
+  "intentParameters" : [ ],
+  "exampleData" : [ {
+    "sentence" : "OAuth2",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "show me oauth2",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "token based authentication",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "show me cats via oauth2",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "baby cats via oauth2",
+    "exampleEntities" : [ ]
+  }, {
+    "sentence" : "test oauth2",
+    "exampleEntities" : [ ]
+  } ]
+}
